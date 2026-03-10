@@ -1,0 +1,77 @@
+{
+
+"magnetstein_path" : "/home/basia/Documents/spectroscopy/magnetstein",
+
+"src_path" : "/home/basia/Documents/spectroscopy/new_magnetstein_data/src", 
+
+"components_dictionary" : {
+			"experiment_1": ["Pinene", "Benzyl benzoate"],
+                        "experiment_2": ["Pinene", "Limonene"],
+                        "experiment_7": ["Benzyl benzoate", "m Anisaldehyde"],
+                        "experiment_3": ["Isopropyl myristate", "Benzyl benzoate", "Alpha pinene", "Limonene"],
+                        "experiment_6": ["Pinene", "Benzyl benzoate"],
+                        "experiment_5": ["Lactate", "Alanine", "Creatine", "Creatinine", "Choline chloride"],
+                        "experiment_9": ["Lactate", "Alanine", "Creatine", "Creatinine", "Choline chloride"],
+                        "experiment_4": ["Lactate", "Alanine", "Creatine", "Creatinine", "Choline chloride"],
+                        "experiment_8": ["Benzyl benzoate", "m Anisaldehyde"],
+                         "experiment_10": ["Leucine", "Isoleucine", "Valine"],
+                        "experiment_11": ["Leucine", "Isoleucine", "Valine"]
+                        },
+
+"protons_dictionary" : {
+			"experiment_1": [16, 12],
+                        "experiment_2": [16, 16],
+                        "experiment_7": [12, 8],
+                        "experiment_3": [34, 12, 16, 16],
+                        "experiment_6": [16, 12],
+                        "experiment_5": [4, 4, 5, 5, 13],
+                        "experiment_9": [4, 4, 5, 5, 13],
+                        "experiment_4": [4, 4, 5, 5, 13],
+                        "experiment_8": [12, 8],
+                        "experiment_10": [10, 10, 8],
+                        "experiment_11": [10, 10, 8]
+                        },
+                            
+"experiments_folders" : {
+			"experiment_1": "experiment_1_intensity_difference",
+                        "experiment_6": "experiment_6_miniperfumes",
+                        "experiment_5": "experiment_5_metabolites",
+                         "experiment_7": "experiment_7_overlapping_and_intensity_difference",
+                         "experiment_9": "experiment_9_and_4_shim",
+                       "experiment_4": "experiment_9_and_4_shim",
+                        "experiment_8": "experiment_8_different_solvents",
+                        "experiment_3": "experiment_3_perfumes_and_absent_components",
+                         "experiment_2": "experiment_2_overlapping",
+                       "experiment_10": "experiment_10_bcaa",
+                        "experiment_11": "experiment_11_real_food_product"
+                        },
+                        
+"ground_truth_molar_proportions" : {
+					"experiment_1": [0.09088457406472417, 0.9091154259352758],
+                                        "experiment_2": [0.505, 0.495],
+                                        "experiment_7": [0.8403875207510383, 0.1596124792489616],
+                                        "experiment_3": [0.7264578344443725, 0.10578603326645526, 0.081968804608116, 0.08578732768105625],
+                                        "experiment_6": [0.3865, 0.6135],
+                                        "experiment_5": [0.3022, 0.2240, 0.1253, 0.2028, 0.1457],
+                                        "experiment_9": [0.3022, 0.2240, 0.1253, 0.2028, 0.1457],
+                                        "experiment_4": [0.3022, 0.2240, 0.1253, 0.2028, 0.1457],
+                                        "experiment_8": [0.3702, 0.6298],
+                                        "experiment_10": [
+							    [0.3401, 0.3299, 0.3299],
+							    [0.2525, 0.2475, 0.5],
+							    [0.2538, 0.4949, 0.2513],
+							    [0.2075, 0.3942, 0.3983]
+							    ],
+                                        "experiment_11": [0.4855, 0.2427, 0.2718]
+                                        },
+                        
+                        
+"best_kappa_mix" : [0.09, 0.05, 0.37, 0.11, 0.03, 0.06, 0.30, 0.2, 0.05, [0.23, 0.14, 0.09, 0.12], 0.27],
+                        
+"best_kappa_model" : [0.08, 0.01, 0.24, 0.02, 0.09, 0.2, 0.04, 0.29, 0.02, [0.09, 0.06, 0.05, 0.06], 0.11]
+        
+                        
+                        
+                        
+                                                
+}
