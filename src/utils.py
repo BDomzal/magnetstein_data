@@ -139,18 +139,61 @@ def save_noise_in_mixture(estimation, nr_of_experiment, experiments_folders, fil
 	                                    '_default_parameters.csv',
 	                                      mix_noise)
 
-def get_all_componets_results_concentrations(experiments_folders, ground_truth_molar_proportions, protons_dictionary):
+def get_results_concentrations(
+                                nr_of_experiment, 
+                                experiments_folders, 
+                                ground_truth_molar_proportions, 
+                                protons_dictionary,
+                                variant=0
+                                ):
+	    
+	#MOLAR
+    if (nr_of_experiment != 9 and nr_of_experiment != 4 and nr_of_experiment != 10):
+        with open(experiments_folders['experiment_' + str(nr_of_experiment)] + '/results_for_different_kappas.pkl', 'rb') as f:
+            list_of_dataframes_with_results = pd.read_pickle(f)
+    elif (nr_of_experiment == 9 or nr_of_experiment == 4):
+        with open(experiments_folders['experiment_'+str(nr_of_experiment)] + '/results_for_different_kappas_exp' + str(nr_of_experiment) + '.pkl', 'rb') as f:
+            list_of_dataframes_with_results = pd.read_pickle(f)
+    else:
+        with open(experiments_folders['experiment_'+str(nr_of_experiment)] + '/results_for_different_kappas_variant_' + str(variant+1) + '.pkl', 'rb') as f:
+            list_of_dataframes_with_results = pd.read_pickle(f)
+            
+    molar_proportions = ground_truth_molar_proportions['experiment_' + str(nr_of_experiment)]
+    protons = protons_dictionary['experiment_' + str(nr_of_experiment)]
+    
+    temp = []
+    for nr_of_component, df in enumerate(list_of_dataframes_with_results):
+        temp.append(df/protons[nr_of_component])
+
+    list_of_dataframes_with_results = [df/sum(temp) for df in temp]
+
+    dataframes_ready_for_heatmap = []
+
+    for i, df in enumerate(list_of_dataframes_with_results):
+        preprocessed_df = abs(df - molar_proportions[i])
+        dataframes_ready_for_heatmap.append(preprocessed_df)
+        
+    all_components_results_molar = sum(dataframes_ready_for_heatmap)
+
+    all_components_results_molar = all_components_results_molar.apply(pd.to_numeric, errors = 'coerce', axis=0)
+
+    return all_components_results_molar
+
+def get_all_components_results_concentrations(experiments_folders, ground_truth_molar_proportions, protons_dictionary, variant=0):
 
 	list_of_results_for_experiments = []
 
 	for nr_of_experiment in range(1,10):
 	    
 	    #MOLAR
-	    if (nr_of_experiment != 9 and nr_of_experiment != 4):
+	    if (nr_of_experiment != 9 and nr_of_experiment != 4 and nr_of_experiment != 10):
 	        with open(experiments_folders['experiment_' + str(nr_of_experiment)] + '/results_for_different_kappas.pkl', 'rb') as f:
 	            list_of_dataframes_with_results = pd.read_pickle(f)
-	    else:
+	    elif (nr_of_experiment == 9 or nr_of_experiment == 4):
 	        with open(experiments_folders['experiment_'+str(nr_of_experiment)] + '/results_for_different_kappas_exp' + str(nr_of_experiment) + '.pkl', 'rb') as f:
+	            list_of_dataframes_with_results = pd.read_pickle(f)
+	    else:
+	        with open(experiments_folders['experiment_'+str(nr_of_experiment)] + '/results_for_different_kappas_variant_' + str(variant+1) + '.pkl', 'rb') as f:
 	            list_of_dataframes_with_results = pd.read_pickle(f)
 	            
 	    molar_proportions = ground_truth_molar_proportions['experiment_' + str(nr_of_experiment)]
@@ -169,40 +212,9 @@ def get_all_componets_results_concentrations(experiments_folders, ground_truth_m
 	        dataframes_ready_for_heatmap.append(preprocessed_df)
 	        
 	    all_components_results_molar = sum(dataframes_ready_for_heatmap)
+	    all_components_results_molar = all_components_results_molar.apply(pd.to_numeric, errors = 'coerce', axis=0)
+
 	    list_of_results_for_experiments.append(all_components_results_molar)
-
-	return list_of_results_for_experiments
-
-	    
-def get_all_components_results_areas(experiments_folders, ground_truth_molar_proportions, protons_dictionary):
-
-	list_of_results_for_experiments = []
-
-	for nr_of_experiment in range(1,10):
-
-	    
-	    #VISIBLE
-	    if (nr_of_experiment != 9 and nr_of_experiment != 4):
-	        with open(experiments_folders['experiment_' + str(nr_of_experiment)] + '/results_for_different_kappas.pkl', 'rb') as f:
-	            list_of_dataframes_with_results = pd.read_pickle(f)
-	    else:
-	        with open(experiments_folders['experiment_' + str(nr_of_experiment)] + '/results_for_different_kappas_exp' + str(nr_of_experiment) + '.pkl', 'rb') as f:
-	            list_of_dataframes_with_results = pd.read_pickle(f)
-
-	    molar_proportions = ground_truth_molar_proportions['experiment_' + str(nr_of_experiment)]
-	    protons = protons_dictionary['experiment_' + str(nr_of_experiment)]
-	            
-	    real_visible_proportions = [prot*prop for prot, prop in zip(protons, molar_proportions)]
-	    real_visible_proportions = [prop/sum(real_visible_proportions) for prop in real_visible_proportions]
-	    
-	    dataframes_ready_for_heatmap = []
-	    for i, df in enumerate(list_of_dataframes_with_results):
-	        preprocessed_df = abs(df - real_visible_proportions[i])
-	        dataframes_ready_for_heatmap.append(preprocessed_df)
-	        
-	    all_components_results_vis = sum(dataframes_ready_for_heatmap)
-
-	    list_of_results_for_experiments.append(all_components_results_vis)
 
 	return list_of_results_for_experiments
 
@@ -263,4 +275,85 @@ def draw_heatmap(
 	plt.ylabel("Kappa mixture", fontsize=15, labelpad=5)
 
 	plt.tight_layout()
+	plt.show()
+
+
+def draw_heatmap_power_norm(
+							nr_of_experiment,
+							all_components_results,
+							powers_in_power_norm = [0.45, 1.5, 1.3, 0.65, 0.6, 0.5, 0.525, 0.455, 0.65, [0.75, 0.75, 0.75, 0.75], 0.75],
+							colors = ['#2D85C5', '#3CA9EE', '#61BDEE', '#A5D3EB', '#E2E2E2', '#DFA693', '#DC6E55', '#E14B32', '#C33726'],
+							remove_edge = True,
+							variant=0
+							):
+
+	#version with mean of molar and visible proportions
+	#powers_in_power_norm = [0.33, 0.8, 0.75, 0.55, 0.39, 0.28, 0.58, 0.342, 0.65]
+
+	#version with only molar proportions
+	#powers_in_power_norm = [0.45, 1.5, 1.3, 0.65, 0.6, 0.5, 0.525, 0.455, 0.65, 0.75, 0.75],
+
+	all_components_results_both = all_components_results
+
+	if remove_edge and (nr_of_experiment==3 or nr_of_experiment==8):
+		all_components_results_both = all_components_results_both.iloc[:30,:30]
+
+	vmin = all_components_results_both.min().min()
+	vmax = all_components_results_both.max().max()
+
+	my_cmap = ListedColormap(colors)
+
+	if nr_of_experiment == 10:
+	    my_norm = PowerNorm(powers_in_power_norm[nr_of_experiment-1][variant], vmin, vmax)
+	else:
+	    my_norm = PowerNorm(powers_in_power_norm[nr_of_experiment-1], vmin, vmax)
+
+	if remove_edge:
+	    all_components_results_both = all_components_results_both.iloc[1:, 1:]
+
+
+	labels = [round(x,3) for x in all_components_results_both.columns]
+	if nr_of_experiment==3 or nr_of_experiment==8:
+	    labels = labels[:30]
+	if remove_edge:
+	    labels = labels[1:]
+	    
+
+	ax = sns.heatmap(all_components_results_both.astype(float), yticklabels=labels, cbar=True,
+	                square=True, vmin=vmin, vmax=vmax, xticklabels = labels,
+	                cmap=my_cmap, norm=my_norm, cbar_ax=None)
+
+	ax.invert_yaxis()
+
+	for ind, label in enumerate(ax.get_xticklabels()):
+	    if (ind + 3) % 5 == 0:  # every 10th label is kept
+	        label.set_visible(True)
+	    else:
+	        label.set_visible(False)
+	        
+	for ind, label in enumerate(ax.get_yticklabels()):
+	    if (ind + 3) % 5 == 0:  # every 10th label is kept
+	        label.set_visible(True)
+	    else:
+	        label.set_visible(False)
+
+	cbar = ax.collections[0].colorbar
+	cbar.set_label('Error of estimation', fontsize=15, labelpad=5)
+	cbar.ax.tick_params(labelsize=14)
+	# minorticks = [0.1, 0.2]
+	# cbar.ax.yaxis.set_ticks(minorticks, minor=True)
+
+	plt.xticks(fontsize=14)
+	plt.yticks(fontsize=14)
+
+	plt.xlabel("Kappa components", fontsize=15, labelpad=5)
+	plt.ylabel("Kappa mixture", fontsize=15, labelpad=5)
+
+	plt.tight_layout()
+
+	if nr_of_experiment != 10:
+	    plt.savefig('heatmap_experiment_'+str(nr_of_experiment)+'.png', dpi=300)
+	else:
+	    plt.savefig('heatmap_experiment_'+str(nr_of_experiment)+'_variant_'+str(variant+1)+'.png', dpi=300)
+
 	plt.show()

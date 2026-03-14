@@ -24,12 +24,6 @@ list_of_results_for_experiments = get_all_components_results_concentrations(
                                                                             )
 
 
-list_of_results_for_experiments_areas =  get_all_components_results_areas(
-                                                                          EXPERIMENTS_FOLDERS, 
-                                                                          GROUND_TRUTH_MOLAR_PROPORTIONS, 
-                                                                          PROTONS_DICTIONARY
-                                                                         )
-
 total_error_all_experiments = get_total_error_from_all_experiments(list_of_results_for_experiments)
 
 
