@@ -14,6 +14,11 @@ import seaborn as sns
 from textwrap import wrap
 import pulp
 
+def get_ppm(sp):
+	return np.array(sp.confs)[:,0]
+
+def get_intensities(sp):
+	return np.array(sp.confs)[:,1]
 
 def get_mix_spectrum(nr_of_experiment, experiments_folders, variant=0):
 
@@ -357,3 +362,52 @@ def draw_heatmap_power_norm(
 	    plt.savefig('heatmap_experiment_'+str(nr_of_experiment)+'_variant_'+str(variant+1)+'.png', dpi=300)
 
 	plt.show()
+
+
+def plot_components_without_scaling(
+									spectra, 
+									components_dictionary,
+									nr_of_experiment,
+									xlims_lower,
+									xlims_upper,
+									variant=0,
+									path_to_save=None,
+									colors = ['blue', 'orange', 'green', 'red', 'pink']
+									):
+
+
+	for i, spectrum in enumerate(spectra):
+	    fig, ax = plt.subplots()
+	    fig.set_size_inches(9, 4, forward=True)
+
+	    ax.set_xlim(xlims_lower[nr_of_experiment-1], xlims_upper[nr_of_experiment-1])
+	    #ax.set_ylim(ylims_lower[nr_of_experiment-1], ylims_upper[nr_of_experiment-1])
+	    ax.get_yaxis().set_visible(False)
+
+	    ax.spines['top'].set_visible(False)
+	    ax.spines['right'].set_visible(False)
+	    ax.spines['bottom'].set_visible(False)
+	    ax.spines['left'].set_visible(False)
+
+
+	    plt.xlabel(chr(0x00b9)+'H, ppm', fontsize=15, labelpad=5)
+
+	    ppm = get_ppm(spectrum)
+	    intensity = get_intensities(spectrum)
+
+	    ax.plot(ppm, intensity, color=colors[i],
+	           label=components_dictionary['experiment_'+str(nr_of_experiment)][i])
+	    ax.fill_between(ppm, 0, intensity, color=colors[i], alpha=1.0)
+	    ax.invert_xaxis()
+
+	    ax.legend(prop={'size': 12}, loc='upper left')
+	    plt.tight_layout()
+
+	    if path_to_save is not None:
+		    if nr_of_experiment != 10:
+		        plt.savefig(path_to_save + 'experiment'+str(nr_of_experiment)+'/component'+str(i)+'.png', dpi=300)
+
+		    else:
+		        plt.savefig(path_to_save + 'experiment'+str(nr_of_experiment)+'/component'+str(i)+'_variant_'+str(variant+1)+'.png', dpi=300)
+
+	    plt.show()
