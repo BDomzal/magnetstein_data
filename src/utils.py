@@ -411,3 +411,146 @@ def plot_components_without_scaling(
 		        plt.savefig(path_to_save + 'experiment'+str(nr_of_experiment)+'/component'+str(i)+'_variant_'+str(variant+1)+'.png', dpi=300)
 
 	    plt.show()
+
+
+def get_mix_without_noise(mix, estimation, whether_normalize=True):
+
+    ppm = get_ppm(mix)
+    mix_ints = get_intensities(mix)
+    mix_without_noise = NMRSpectrum(confs = list(zip(ppm, mix_ints - np.array(estimation['noise']))))
+    if whether_normalize:
+        mix_without_noise.normalize()
+    return mix_without_noise
+
+
+def get_components_without_noise(components, estimation):
+
+    p = estimation['proportions']
+    p = np.array(p).reshape(len(p),1)
+    
+    components_ints = [get_intensities(comp) for comp in components]
+    components = [comp.reshape(-1,1) for comp in components_ints]
+    components_no_scaling = np.concatenate(components, axis=1)
+    components_scaled = components_no_scaling*p[:,0]
+
+    proportions_point_by_point = (components_scaled/np.sum(components_scaled, axis=1).reshape(-1,1))
+    proportions_point_by_point = np.nan_to_num(proportions_point_by_point)
+    noise_in_ref = np.array(estimation['noise_in_components']).reshape(-1,1)
+    noise_split_for_components = proportions_point_by_point*noise_in_ref
+
+    res = components_scaled - noise_split_for_components
+    return res
+
+
+def get_components_up_to(components_without_noise):
+
+    comp_nr = components_without_noise.shape[1]
+    return [np.sum(components_without_noise[:,:(i+1)], axis=1) for i in range(comp_nr)]
+
+
+def plot_components_added_in_estimated_proportions(
+                                                    components,
+                                                    mixture,
+                                                    estimation,
+                                                    nr_of_experiment,
+                                                    components_dictionary,
+                                                    xlims_lower,
+                                                    xlims_upper,
+                                                    ylims_lower,
+                                                    ylims_upper,
+                                                    colors = ['blue', 'orange', 'green', 'red', 'pink'],
+                                                    include_mixture=False,
+                                                    path_to_save=None
+                                                    ):
+    
+    components_without_noise = get_components_without_noise(components, estimation)
+    components_up_to = get_components_up_to(components_without_noise)
+    ppm = get_ppm(components[0])
+    mixture = get_intensities(mixture)
+    
+    fig, ax = plt.subplots()
+    fig.set_size_inches(9, 4, forward=True)
+    
+    ax.set_xlim(xlims_lower[nr_of_experiment-1], xlims_upper[nr_of_experiment-1])
+    ax.set_ylim(ylims_lower[nr_of_experiment-1], ylims_upper[nr_of_experiment-1])
+    ax.get_yaxis().set_visible(False)
+    
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    
+    plt.xlabel(chr(0x00b9)+'H, ppm', fontsize=15, labelpad=5)
+    #plt.ylabel('Relative intensity', fontsize=15, labelpad=10)
+    
+    for i, comp_up_to in enumerate(components_up_to):
+        ax.plot(ppm, comp_up_to, alpha=1.0, color = colors[i], 
+                label=components_dictionary['experiment_'+str(nr_of_experiment)][i])
+        if i==0:
+            ax.fill_between(ppm, 0, comp_up_to, color=colors[0], alpha=1.0)
+        else:
+            predecessor = components_up_to[i-1]
+            ax.fill_between(ppm, predecessor, comp_up_to, color=colors[i], alpha=1.0)
+    if include_mixture:
+        ax.plot(ppm, mixture, color='black', alpha=1.0, label='Mixture', linewidth=0.5)
+    
+    ax.invert_xaxis()
+    ax.legend(prop={'size': 12}, loc='upper left')
+    plt.tight_layout()
+    if path_to_save is not None:
+        if nr_of_experiment != 10:
+            if include_mixture:
+                plt.savefig(path_to_save + 'experiment' + str(nr_of_experiment) + '/mixture_and_all_components.png', dpi=300)
+            else:
+                plt.savefig(path_to_save + 'experiment' + str(nr_of_experiment) + '/all_components.png', dpi=300)
+        else:
+            if include_mixture:
+                plt.savefig(path_to_save + 'experiment' + str(nr_of_experiment) + '/mixture_and_all_components_variant' + str(variant + 1) + '.png', dpi=300)
+            else:
+                plt.savefig(path_to_save + 'experiment' + str(nr_of_experiment) + '/all_components_variant_' + str(variant + 1) + '.png', dpi=300)
+    plt.show()
+
+
+def plot_mixture(
+                mixture,
+                nr_of_experiment,
+                components_dictionary,
+                xlims_lower,
+                xlims_upper,
+                ylims_lower,
+                ylims_upper,
+                path_to_save=None
+                ):
+    
+    ppm = get_ppm(mixture)
+    mixture = get_intensities(mixture)
+
+    colors = ['blue', 'orange', 'green', 'red', 'pink']
+    fig, ax = plt.subplots()
+    #fig.set_size_inches(10, 7, forward=True)
+    fig.set_size_inches(9, 4, forward=True)
+    
+    ax.set_xlim(xlims_lower[nr_of_experiment-1], xlims_upper[nr_of_experiment-1])
+    ax.set_ylim(ylims_lower[nr_of_experiment-1], ylims_upper[nr_of_experiment-1])
+    ax.get_yaxis().set_visible(False)
+    
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    
+    
+    plt.xlabel(chr(0x00b9)+'H, ppm', fontsize=15, labelpad=5)
+    #plt.ylabel('Relative intensity', fontsize=15, labelpad=10)
+    
+    ax.plot(ppm, mixture, color='black', alpha=1.0, label='Mixture', linewidth=0.5)
+    ax.invert_xaxis()
+    
+    ax.legend(prop={'size': 12}, loc='upper left')
+    
+    fig.tight_layout()
+    if path_to_save is not None:
+        if nr_of_experiment != 10:
+            fig.savefig(path_to_save + 'experiment' + str(nr_of_experiment) + '/mixture.png', dpi=300)
+        else:
+            fig.savefig(path_to_save + 'experiment' + str(nr_of_experiment) + '/mixture_variant_' + str(variant + 1) + '.png', dpi=300)
