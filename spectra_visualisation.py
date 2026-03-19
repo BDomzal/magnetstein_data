@@ -94,8 +94,8 @@ plot_components_without_scaling(
 									nr_of_experiment,
                                     XLIMS_LOWER,
                                     XLIMS_UPPER,
-									variant=0,
-									#path_to_save=os.getcwd()+'/visualisations/',
+									variant=variant,
+									path_to_save=os.getcwd()+'/visualisations/',
 									colors = ['blue', 'orange', 'green', 'red', 'pink']
 									)
 
@@ -114,7 +114,9 @@ plot_components_added_in_estimated_proportions(
                                                     XLIMS_LOWER_COMP,
                                                     XLIMS_UPPER_COMP,
                                                     YLIMS_LOWER_COMP,
-                                                    YLIMS_UPPER_COMP
+                                                    YLIMS_UPPER_COMP,
+                                                    path_to_save=os.getcwd()+'/visualisations/',
+                                                    variant=variant
                                                 )
 
 
@@ -135,7 +137,8 @@ plot_mixture(
                 XLIMS_UPPER_COMP,
                 YLIMS_LOWER_COMP,
                 YLIMS_UPPER_COMP,
-                path_to_save=None
+                path_to_save=os.getcwd()+'/visualisations/',
+                variant=variant
                 )
 
 
@@ -152,6 +155,8 @@ plot_components_added_in_estimated_proportions(
                                                     XLIMS_UPPER_COMP,
                                                     YLIMS_LOWER_COMP,
                                                     YLIMS_UPPER_COMP,
-                                                    include_mixture=True
+                                                    include_mixture=True,
+                                                    path_to_save=os.getcwd()+'/visualisations/',
+                                                    variant=variant
                                                 )
 

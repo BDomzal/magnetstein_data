@@ -460,7 +460,8 @@ def plot_components_added_in_estimated_proportions(
                                                     ylims_upper,
                                                     colors = ['blue', 'orange', 'green', 'red', 'pink'],
                                                     include_mixture=False,
-                                                    path_to_save=None
+                                                    path_to_save=None,
+                                                    variant=0
                                                     ):
     
     components_without_noise = get_components_without_noise(components, estimation)
@@ -519,7 +520,8 @@ def plot_mixture(
                 xlims_upper,
                 ylims_lower,
                 ylims_upper,
-                path_to_save=None
+                path_to_save=None,
+                variant=0
                 ):
     
     ppm = get_ppm(mixture)
