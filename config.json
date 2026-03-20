@@ -4,6 +4,34 @@
 
 "src_path" : "/home/basia/Documents/spectroscopy/new_magnetstein_data/src", 
 
+"mix_raw_files" : {
+			"experiment_1": "benzyl_benzoate_pinene_duza_roznica_intensywnosci_pikow.csv",
+                        "experiment_2": "limonene_pinene_nakrywajace_sie.csv",
+                        "experiment_3": "Mieszanina_perfumy_bez_menthonu.csv",
+                         "experiment_4": "metabolity_shimy.csv",
+                         "experiment_5": "mieszanina_metabolitow.csv",
+                       "experiment_6": "mini_perfumy_duze_pole_CDCl3.csv",
+                        "experiment_7": "m_anisaldehyde_benzylbenzoate_nakrywajace_sie_I_dyzy_zakres+intensywnosci_pikow.csv",
+                        "experiment_8": "1H_manisaldehyde_benzylbenzoate_DMSO.csv",
+                         "experiment_9": "metabolity_shimy.csv",
+                       "experiment_10": ["mixture_I.csv", "mixture_II.csv", "mixture_III.csv", "mixture_IV.csv"],
+                        "experiment_11": "BCAA_aligned.csv"
+},
+
+"components_raw_files" : {
+			"experiment_1": "library.csv",
+                        "experiment_2": "library.csv",
+                        "experiment_3": "Mieszanina_perfumy.csv",
+                         "experiment_4": "metabolity.csv",
+                         "experiment_5": "metabolity.csv",
+                       "experiment_6": "mini_perfumy_duze_pole_CDCl3.csv",
+                        "experiment_7": "library.csv",
+                        "experiment_8": "library.csv",
+                         "experiment_9": "metabolity.csv",
+                       "experiment_10": "library_BCAA_aligned.csv",
+                        "experiment_11": "library_BCAA_aligned.csv"
+},
+
 "components_dictionary" : {
 			"experiment_1": ["Pinene", "Benzyl benzoate"],
                         "experiment_2": ["Pinene", "Limonene"],
@@ -31,6 +59,39 @@
                         "experiment_10": [10, 10, 8],
                         "experiment_11": [10, 10, 8]
                         },
+                        
+"mass_proportions" : {
+			"experiment_1": [0.0603, 0.9397],
+                        "experiment_2": [0.505, 0.495],
+                        "experiment_3": [],
+                        "experiment_4": [],
+                        "experiment_5": [],
+                        "experiment_6": [],
+                        "experiment_7": [0.8914, 0.1086],
+                        "experiment_8": [],
+                        "experiment_9": [],
+                        "experiment_10": [],
+                        "experiment_11": []
+                        },
+			
+"molar_masses_or_proportions" : {
+				"experiment_1": [136.24, 212.25],
+			        "experiment_2": [136.24, 136.24],
+			        "experiment_3": [2.2449, 0.3269, 0.2533, 0.2651],
+			        "experiment_4": [0.3022, 0.2240, 0.1253, 0.2028, 0.1457],
+			        "experiment_5": [0.3022, 0.2240, 0.1253, 0.2028, 0.1457],
+			        "experiment_6": [0.3865, 0.6135],
+			        "experiment_7": [212.25, 136.15],
+			        "experiment_8": [0.3702, 0.6298],
+			        "experiment_9": [0.3022, 0.2240, 0.1253, 0.2028, 0.1457],
+			        "experiment_10": [
+						    [0.3401, 0.3299, 0.3299],
+						    [0.2525, 0.2475, 0.5],
+						    [0.2538, 0.4949, 0.2513],
+						    [0.2075, 0.3942, 0.3983]
+						    ],
+			        "experiment_11": [0.4855, 0.2427, 0.2718]
+			        },
                             
 "experiments_folders" : {
 			"experiment_1": "experiment_1_intensity_difference",
