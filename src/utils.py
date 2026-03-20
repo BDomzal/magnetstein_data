@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
+import time
 
-from masserstein import Spectrum, NMRSpectrum, estimate_proportions
+from masserstein import NMRSpectrum, estimate_proportions
 
 import numpy as np
 import pandas as pd
@@ -14,11 +15,105 @@ import seaborn as sns
 from textwrap import wrap
 import pulp
 
+
 def get_ppm(sp):
 	return np.array(sp.confs)[:,0]
 
+
 def get_intensities(sp):
 	return np.array(sp.confs)[:,1]
+
+
+def make_nonnegative(spectrum):
+    confs = np.array(spectrum.confs)
+    neg = confs[:,1]<0
+    confs[:,1][neg]=0
+    new_confs = list(zip(confs[:,0], confs[:,1]))
+    result = NMRSpectrum(confs=new_confs)
+    return(result)
+
+
+def common_ppm_axis(list_of_spectra):
+    all_ppm = set()
+    for sp in list_of_spectra:
+        ppm_set = set(np.array(sp.confs, np.dtype('float'))[:,0])
+        all_ppm = all_ppm.union(ppm_set)
+    all_ppm = np.array(sorted(all_ppm))
+    return all_ppm
+
+def common_mass_axis(list_of_spectra):
+    all_mz = set()
+    for sp in list_of_spectra:
+        mz_set = set(np.array(sp.confs, np.dtype('float'))[:,0])
+        all_mz = all_mz.union(mz_set)
+    all_mz = np.array(sorted(all_mz))
+    return all_mz
+
+
+def get_shift(list_of_spectra, epsilon=0.001):
+    res = list_of_spectra
+    shifted_unique = []
+    old_confs = [np.array(sp.confs) for sp in list_of_spectra]
+    min_of_min = min([min(old_conf[:,0]) for old_conf in old_confs])
+    if min_of_min<0:
+        return (min_of_min - epsilon)*(-1)
+    else:
+        return(0)
+
+
+def shift_one_spectrum(sp, how_much):
+    res = sp
+    old_confs = np.array(sp.confs)
+
+    new_ppm_non_unique = old_confs[:,0] + how_much
+    resampled = sp.resample(np.unique(new_ppm_non_unique) + how_much)
+    new_ppm_unique = np.array(resampled.confs)[:,0]
+    new_ints = np.array(resampled.confs)[:,1]
+    res = NMRSpectrum(confs=list(zip(new_ppm_unique + how_much, new_ints)), protons=sp.protons)
+    return(res)
+
+
+def shift_spectra(list_of_spectra, epsilon=0.001):
+    res = list_of_spectra
+    shifted_unique = []
+    old_confs = [np.array(sp.confs) for sp in list_of_spectra]
+    min_of_min = min([min(old_conf[:,0]) for old_conf in old_confs])
+    if min_of_min<0:
+        shift_coef = (min_of_min - epsilon)*(-1)
+        for i, arr in enumerate(old_confs):
+            new_ppm_non_unique = arr[:,0] + shift_coef
+            resampled = res[i].resample(np.unique(new_ppm_non_unique) - shift_coef)
+            new_ppm_unique = np.array(resampled.confs)[:,0]
+            new_ints = np.array(resampled.confs)[:,1]
+            res[i] = NMRSpectrum(confs=list(zip(new_ppm_unique + shift_coef, new_ints)))
+        return(res)
+    else:
+        return(list_of_spectra)
+
+
+def cut_spectra_to_region(list_of_spectra, lower_bound, upper_bound):
+    res = []
+    for sp in list_of_spectra:
+        ppm = np.array(sp.confs)[:,0]
+        ints = np.array(sp.confs)[:,1]
+        ppm_in_region = np.logical_and(ppm>lower_bound, ppm<upper_bound)
+        new_ppm = ppm[ppm_in_region]
+        new_ints = ints[ppm_in_region]
+        res.append(masserstein.NMRSpectrum(confs=list(zip(new_ppm, new_ints))))
+    return res
+
+
+def remove_peak_from_region(spectrum, region):
+    
+    lower_bound = region[0]
+    upper_bound = region[1]
+    
+    new_confs = np.array(spectrum.confs)
+    in_region = np.logical_and(lower_bound < new_confs[:,0], new_confs[:,0] < upper_bound)
+    new_confs[in_region, 1] = 0
+    
+    return NMRSpectrum(confs=list(zip(new_confs[:,0], new_confs[:,1])))
+
 
 def get_mix_spectrum(nr_of_experiment, experiments_folders, variant=0):
 
