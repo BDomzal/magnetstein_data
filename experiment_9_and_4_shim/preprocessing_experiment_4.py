@@ -301,9 +301,9 @@ print(all_components_results_both[0.02][0.11])
 # ### Saving preprocessed spectra
 
 
-# for i, sp in enumerate(spectra_and_mixture):
-#     try:
-#         np.savetxt('preprocessed_exp4_'+str(names[i])+'.csv', np.array(sp.confs), delimiter=',')
-#     except IndexError:
-#         np.savetxt('preprocessed_exp4_mix.csv', np.array(sp.confs), delimiter=',')
+for i, sp in enumerate(spectra_and_mixture):
+    try:
+        np.savetxt('preprocessed_exp4_'+str(names[i])+'.csv', np.array(sp.confs), delimiter=',', fmt = '%0.18e', newline='\r\n')
+    except IndexError:
+        np.savetxt('preprocessed_exp4_mix.csv', np.array(sp.confs), delimiter=',', fmt = '%0.18e', newline='\r\n')
 

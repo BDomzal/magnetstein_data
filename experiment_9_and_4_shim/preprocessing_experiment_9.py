@@ -306,7 +306,7 @@ print(all_components_results_both[0.02][0.05])
 
 for i, sp in enumerate(spectra_and_mixture):
     try:
-        np.savetxt('preprocessed_exp9_'+str(names[i])+'.csv', np.array(sp.confs), delimiter=',')
+        np.savetxt('preprocessed_exp9_'+str(names[i])+'.csv', np.array(sp.confs), delimiter=',', fmt = '%0.18e', newline='\r\n')
     except IndexError:
-        np.savetxt('preprocessed_exp9_mix.csv', np.array(sp.confs), delimiter=',')
+        np.savetxt('preprocessed_exp9_mix.csv', np.array(sp.confs), delimiter=',', fmt = '%0.18e', newline='\r\n')
 
