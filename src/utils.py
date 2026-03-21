@@ -41,14 +41,6 @@ def common_ppm_axis(list_of_spectra):
     all_ppm = np.array(sorted(all_ppm))
     return all_ppm
 
-def common_mass_axis(list_of_spectra):
-    all_mz = set()
-    for sp in list_of_spectra:
-        mz_set = set(np.array(sp.confs, np.dtype('float'))[:,0])
-        all_mz = all_mz.union(mz_set)
-    all_mz = np.array(sorted(all_mz))
-    return all_mz
-
 
 def get_shift(list_of_spectra, epsilon=0.001):
     res = list_of_spectra
@@ -99,7 +91,7 @@ def cut_spectra_to_region(list_of_spectra, lower_bound, upper_bound):
         ppm_in_region = np.logical_and(ppm>lower_bound, ppm<upper_bound)
         new_ppm = ppm[ppm_in_region]
         new_ints = ints[ppm_in_region]
-        res.append(masserstein.NMRSpectrum(confs=list(zip(new_ppm, new_ints))))
+        res.append(NMRSpectrum(confs=list(zip(new_ppm, new_ints))))
     return res
 
 
