@@ -1,19 +1,22 @@
 # Magnetstein data
+
+<img width="2700" height="1200" alt="all_components_variant_4" src="https://github.com/user-attachments/assets/0fe12e68-996b-4c93-bbd8-40ae922ee87c" />
+
 Data for Magnetstein [paper](https://pubs.acs.org/doi/full/10.1021/acs.analchem.3c03594) &amp; [web application](https://bioputer.mimuw.edu.pl/magnetstein). 
 
 For more info about Magnetstein, go [here](https://github.com/BDomzal/magnetstein).
 
 # Contents of this repository
 
-The most important file here is `estimation.ipynb`. This notebook contains the code for estimation of proportions for all the experiments (1-11).
+The most important file here is `estimation.py`. This script contains the code for estimation of proportions for all the experiments (1-11).
 
-Folders starting from the word `experiment` contain raw data, notebooks used for preprocessing and preprocessed data.
+Folders starting from the word `experiment` contain raw data, scripts used for preprocessing and preprocessed data.
 
-Notebook `spectra_visualisation.ipynb` contains code for creating visualisations (included in folder `visualisations/`).
+Script `spectra_visualisation.py` contains code for creating visualisations (included in folder `visualisations/`).
 
-Notebook `AvRE_calculation.ipynb` contains code for computing averaged relative error.
+Script `AvRE_calculation.py` contains code for computing averaged relative error.
 
-Notebook `default_parameters_search.ipynb` checks which values of parameters give the least overall error among all the experiments.
+Script `default_parameters_search.py` checks which values of parameters give the least overall error among all the experiments.
 
 In folder `heatmaps/` there are visualisations showing influence of $\kappa_{mixture}$ and $\kappa_{components}$ parameters on the quality of estimation.
 
