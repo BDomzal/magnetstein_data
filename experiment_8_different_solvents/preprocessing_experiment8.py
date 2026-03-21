@@ -64,14 +64,7 @@ for i, comp_ints in enumerate(components_ints):
 
 mix = NMRSpectrum(confs=list(zip(ppm,mix)))
 
-
 NMRSpectrum.plot_all([mix]+spectra, profile=True)
-
-
-# ### Alignment
-
-# shift_right = [0.14, 0.15, 0.14, 0.14, 0.14] #equivalently, we can shift mixture 0.14 to the left
-# mix = shift_one_spectrum(mix, -0.1)
 
 
 # ### Preprocessing
@@ -79,7 +72,11 @@ NMRSpectrum.plot_all([mix]+spectra, profile=True)
 spectra_and_mixture = spectra + [mix]
 
 
-shift_coef = get_shift(spectra_and_mixture)
+spectra_and_mixture = shift_spectra(spectra_and_mixture)
+# ### Alignment
+
+# shift_right = [0.14, 0.15, 0.14, 0.14, 0.14] #equivalently, we can shift mixture 0.14 to the left
+# mix = shift_one_spectrum(mix, -0.1)
 
 
 preprocessed_spectra = []
@@ -127,8 +124,8 @@ del(preprocessed_spectra)
 # ### Removing unnecessary data points
 
 #3.5, 12
+shift_coef = get_shift(spectra_and_mixture)
 preprocessed_spectra = cut_spectra_to_region(spectra_and_mixture, 3.5-shift_coef, 12-shift_coef)
-
 
 spectra_and_mixture = preprocessed_spectra
 spectra = spectra_and_mixture[:-1]
@@ -281,9 +278,9 @@ print(all_components_results_both[0.02][0.13])
 
 for i, sp in enumerate(spectra_and_mixture):
     try:
-        np.savetxt('preprocessed_'+str(names[i])+'.csv', np.array(sp.confs), delimiter=',')
+        np.savetxt('preprocessed_'+str(names[i])+'.csv', np.array(sp.confs), delimiter=',', fmt = '%0.18e')
     except IndexError:
-        np.savetxt('preprocessed_mix.csv', np.array(sp.confs), delimiter=',')
+        np.savetxt('preprocessed_mix.csv', np.array(sp.confs), delimiter=',', fmt = '%0.18e')
 
 
 #this is different from the file in the repo (only ppm column, the second one is identical). TO DO: check why
