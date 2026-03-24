@@ -1,4 +1,4 @@
-# Magnetstein data
+# <img src="https://github.com/user-attachments/assets/008fa262-7fa1-458c-a8fc-f4f6e3a2022a" align="left" height="80" width="60"/> Magnetstein data
 
 <img width="2700" height="1200" alt="all_components_variant_4" src="https://github.com/user-attachments/assets/0fe12e68-996b-4c93-bbd8-40ae922ee87c" />
 
