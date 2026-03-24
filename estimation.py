@@ -1,9 +1,9 @@
 # ### Settings & imports
 
-nr_of_experiment = 1
+nr_of_experiment = 5
 experiment_name = 'experiment_' + str(nr_of_experiment)
 
-variant = 3
+variant = 0
 
 default_MTD = 0.25
 default_MTD_th = 0.22
@@ -67,7 +67,7 @@ print('Proportions (based on area only):')
 print(estimation_vis['proportions'])
 print('Proportion of noise in components:')
 print(estimation_vis['proportion_of_noise_in_components'])
-print('Propotion of noise in mixture:')
+print('Proportion of noise in mixture:')
 print(1 - sum(estimation_vis['proportions']))
 print('Estimation took '+ str(stop_vis-start_vis) + ' seconds.')
 
@@ -164,7 +164,7 @@ print('Proportions (based on area only, best kappa settings):')
 print(estimation_vis_opt['proportions'])
 print('Proportion of noise in components:')
 print(estimation_vis_opt['proportion_of_noise_in_components'])
-print('Propotion of noise in mixture:')
+print('Proportion of noise in mixture:')
 print(1 - sum(estimation_vis_opt['proportions']))
 print('Estimation took '+ str(stop_vis_opt-start_vis_opt) + ' seconds.')
 
