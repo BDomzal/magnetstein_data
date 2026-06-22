@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import time
 
-from masserstein import NMRSpectrum, estimate_proportions
+from magnetstein import NMRSpectrum, estimate_proportions
 
 import numpy as np
 import pandas as pd
